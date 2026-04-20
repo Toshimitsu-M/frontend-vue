@@ -29,6 +29,25 @@ npm run dev
 npm run build
 ```
 
+## デプロイ（GitHub Pages / antarctic-vue.com）
+
+カスタムドメイン `antarctic-vue.com` へのデプロイ手順：
+
+```bash
+# 1. 本番用ビルド（型チェックをスキップしてビルドのみ実行）
+npm run build-only
+
+# 2. gh-pages ブランチへ公開
+npx gh-pages -d dist
+```
+
+> **注意**: `vite.config.ts` の `base` は `/` に設定すること。  
+> カスタムドメイン使用時に `/frontend-vue/` にすると、アセットが 404 になる。
+
+`public/CNAME` に `antarctic-vue.com` が記載されており、ビルド時に `dist/` へコピーされる。
+
+---
+
 ## Lint チェック（[ESLint](https://eslint.org/) 使用）
 
 ```bash
@@ -48,6 +67,6 @@ TypeScript は `.vue` ファイルの型を標準では理解できません。
 
 ## 補足
 
-このプロジェクトは、「つくって試して、育てていくラボ的ポートフォリオ」の一環です。
-本リポジトリでは、主にフロントエンドの技術スタック（Vue 3, Vite, TypeScript）の検証・適用を行っています。
+このプロジェクトは Antarctic-Vue（antarctic-vue.com）のフロントエンドです。
+主にフロントエンドの技術スタック（Vue 3, Vite, TypeScript）の検証・適用を行っています。
 
