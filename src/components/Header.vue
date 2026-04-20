@@ -1,8 +1,7 @@
 <template>
   <div class="flex">
     <img src="@/assets/penguin_logo_1.svg" class="w-10 h-auto" />
-    <div class="h-6 font-bold text-lg">UI Labo。</div>
-    <div>
+<div>
       <Bars3Icon class="w-5 h-8 ml-1 text-gray-600 cursor-pointer" @click="emit('update:show', !show)" />
     </div>
 
