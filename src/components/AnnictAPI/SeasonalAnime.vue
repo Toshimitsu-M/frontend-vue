@@ -3,13 +3,13 @@
     <div class="flex gap-3 justify-center mb-6">
       <select
         v-model="selectedYear"
-        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
       >
         <option v-for="y in years" :key="y" :value="y">{{ y }}年</option>
       </select>
       <select
         v-model="selectedSeason"
-        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
       >
         <option v-for="s in seasonOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
       </select>
@@ -32,7 +32,7 @@
       <button
         v-if="annictCards?.searchWorks.edges.length"
         @click="loadMore"
-        class="mt-6 px-6 py-2 bg-gray-700 hover:bg-orange-600 text-white rounded-full transition-colors"
+        class="mt-6 px-6 py-2 bg-primary-700 hover:bg-primary-600 text-white rounded-full transition-colors"
       >
         もっと表示
       </button>

@@ -10,7 +10,7 @@
           @keyup.enter="performSearch"
         />
         <button
-          class="bg-gray-700 hover:bg-orange-600 px-4 flex items-center justify-center"
+          class="bg-primary-700 hover:bg-primary-600 px-4 flex items-center justify-center"
           @click="performSearch"
         >
           <svg
@@ -37,8 +37,8 @@
             :class="[
               'py-2 px-4 text-lg font-bold transition-all',
               selectedTab === index
-                ? 'text-orange-600 border-b-4 border-orange-600'
-                : 'text-gray-500 hover:text-orange-600'
+                ? 'text-primary-600 border-b-4 border-primary-600'
+                : 'text-gray-500 hover:text-primary-600'
             ]"
           >
             {{ tab.label }}
