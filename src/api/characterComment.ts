@@ -41,28 +41,12 @@ export const fetchCharacterComments = async (characterId: string): Promise<Chara
 
 
 //コメントの追加、更新API
-const saveResult = ref<string>()
-export const saveCharacterComment = (commentData: CharacterComment) => {
-  try {
-    axios
-      .post<string>(`${baseUrl}/characterComment/process`, commentData)
-      .then((response) => {
-        console.log(response.data)
-        saveResult.value = response.data
-      })
-  } catch (error) {
-    console.error('API Error:', error)
-  }
+export const saveCharacterComment = async (commentData: CharacterComment): Promise<void> => {
+  const response = await axios.post<string>(`${baseUrl}/characterComment/process`, commentData)
+  console.log(response.data)
 }
 
 //コメント削除
-const deleteResult = ref<string>()
-export const deleteCharacterComment = (id: number) => {
-  try {
-    axios.delete<string>(`${baseUrl}/characterComment/delete/${id}`).then((response) => {
-      deleteResult.value = response.data
-    })
-  } catch (error) {
-    console.error('API Error:', error)
-  }
+export const deleteCharacterComment = async (id: number): Promise<void> => {
+  await axios.delete<string>(`${baseUrl}/characterComment/delete/${id}`)
 }

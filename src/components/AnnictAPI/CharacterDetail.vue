@@ -84,7 +84,6 @@ import {
 } from '@heroicons/vue/24/outline'
 import { fetchCharacterComments, saveCharacterComment, deleteCharacterComment, type CharacterComment, createCharacterComment } from '../../api/characterComment'
 import { useAuthStore } from '../../store/auth'
-import { get } from 'http'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -166,33 +165,25 @@ const submitComment = async (commentId: number) => {
     comment.value = ''
 
   } else {
-    // 編集保存の場合の設定
-    // ログインユーザかゲストユーザかを判定
     if (auth.isLoggedIn()) {
-      // ログインユーザで編集保存（API登録）
       commentData = createCharacterComment(commentId, getCharacterId(), auth.user?.email ?? '', editComment.value)
       try {
         await saveCharacterComment(commentData)
-        console.log('コメント保存しました id:' + commentId)
       } catch (error) {
         console.error('コメント保存に失敗しました:', error)
       }
-      
     } else {
-      // ゲストユーザの場合の設定
-      // セッションストレージからゲストユーザIDを取得
-      const guestUserId = sessionStorage.getItem("guestUserId");
-      
+      commentData = createCharacterComment(commentId, getCharacterId(), 'guestUser', editComment.value)
+      sessionStorage.setItem('characterCommentList', JSON.stringify(
+        characterCommentList.value.map(c => c.commentId === commentId ? { ...c, commentText: editComment.value } : c)
+      ))
     }
-    // コメントリストの中から該当するコメントを検索して更新
-    const comment = characterCommentList.value.find((c) => c.commentId === commentData.commentId)
-    if (comment) {
-      comment.commentText = editComment.value
+    const target = characterCommentList.value.find((c) => c.commentId === commentId)
+    if (target) {
+      target.commentText = editComment.value
     }
     editingIndex.value = null
-
-
-
+    showMenu.value = null
   }
 }
 
@@ -207,45 +198,20 @@ const editCommentStart = (id: number, text: string) => {
 
 
 
-// コメント編集保存（いらないかも
-const editCommentSave = async (id: number) => {
-  const commentData: CharacterComment = {
-    commentId: 1,
-    characterId: "d",
-    userId: 'hoge',
-    commentText: "text"
-  }
-  if (editComment.value.trim()) {
-    try {
-      await saveCharacterComment(commentData)
-      console.log('コメント保存しました id:' + id)
-    } catch (error) {
-      console.error('コメント削除に失敗しました', error)
-    }
-
-    // コメントリストの中から該当するコメントを検索して更新
-    const comment = characterCommentList.value.find((c) => c.commentId === commentData.commentId)
-    if (comment) {
-      comment.commentText = editComment.value
-    }
-    editingIndex.value = null
-  }
-}
-
 //コメント削除
 const deleteComment = async (id: number) => {
-  // ゲストユーザの場合はセッションストレージから削除
   if (!auth.isLoggedIn()) {
     characterCommentList.value = characterCommentList.value.filter(c => c.commentId !== id)
     sessionStorage.setItem('characterCommentList', JSON.stringify(characterCommentList.value))
-    return
+  } else {
+    try {
+      await deleteCharacterComment(id)
+      characterCommentList.value = characterCommentList.value.filter(c => c.commentId !== id)
+    } catch (error) {
+      console.error('コメント削除に失敗しました', error)
+    }
   }
-  // ログインユーザの場合はAPIを呼び出して削除
-  try {
-    await deleteCharacterComment(id) //コメント削除API
-  } catch (error) {
-    console.error('コメント削除に失敗しました', error)
-  }
+  showMenu.value = null
 }
 
 // コメントの変更を監視してローカルストレージに保存
@@ -297,14 +263,12 @@ onMounted(async () => {
     console.log('コメントリスト：', characterCommentList.value)
   }
 
-  // ゲストユーザのコメントがある場合はセッションストレージから取得
   const guestComments = sessionStorage.getItem('characterCommentList')
   if (guestComments) {
-    const parsedComments = JSON.parse(guestComments) as CharacterComment[];
-    const filteredComments = parsedComments.filter(comment => comment.characterId === getCharacterId());
-    characterCommentList.value.push(...parsedComments);
+    const parsedComments = JSON.parse(guestComments) as CharacterComment[]
+    const filteredComments = parsedComments.filter(c => c.characterId === getCharacterId())
+    characterCommentList.value.push(...filteredComments)
   }
-  console.log('ゲストユーザのコメントリスト：', characterCommentList.value)
 })
 
 // Wikipedia検索
