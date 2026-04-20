@@ -1,6 +1,6 @@
 <template>
   <ul class="">
-    <li class="mb-1 hover:bg-gray-100/10 dark:hover:bg-orange-100/10" v-for="list in lists" :key="list.name">
+    <li class="mb-1 hover:bg-gray-100/10 dark:hover:bg-orange-100/10" v-for="list in visibleLists" :key="list.name">
       <router-link :to="list.link" class="
                 flex
                 items-center
@@ -14,19 +14,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
-import {
-  ClipboardDocumentCheckIcon,
-  ShoppingCartIcon,
-  ChevronDownIcon,
-} from '@heroicons/vue/24/outline';
+import { computed, reactive } from 'vue';
 
-// 人気アニメ PopularAnime
-// ポケポケカード PokepokeCard
-// MarkItDown MarkItDown 
-// コルクボード CorkBoard
-// アニメリスト AnimeList
-const lists = reactive([
+type Environment = 'development' | 'production';
+
+interface SidebarItem {
+  name: string;
+  icon: string;
+  link: string;
+  /** 表示する環境。省略時はすべての環境で表示 */
+  environments?: Environment[];
+}
+
+const currentEnv = import.meta.env.MODE as Environment;
+
+const lists = reactive<SidebarItem[]>([
   {
     name: 'ホーム',
     icon: 'ClipboardDocumentCheckIcon',
@@ -57,13 +59,9 @@ const lists = reactive([
     icon: 'ClipboardDocumentCheckIcon',
     link: '/characterChat',
   },
-  // {
-  //   name: 'アニメリスト',
-  //   icon: 'ClipboardDocumentCheckIcon',
-  //   link: '/animeList',
-  // }
 ]);
 
-
-
+const visibleLists = computed(() =>
+  lists.filter(item => !item.environments || item.environments.includes(currentEnv))
+);
 </script>
