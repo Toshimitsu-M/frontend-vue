@@ -65,7 +65,7 @@ const store = useAnimeStore()
 
 const getCurrentSeason = (): string => {
   const month = new Date().getMonth() + 1
-  const seasonMap = ['winter', 'winter', 'winter', 'spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'fall', 'fall', 'fall']
+  const seasonMap = ['winter', 'winter', 'winter', 'spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'autumn', 'autumn', 'autumn']
   return seasonMap[month - 1]
 }
 
@@ -85,7 +85,7 @@ const years = computed(() => {
 const seasonOptions = [
   { value: 'spring', label: '春' },
   { value: 'summer', label: '夏' },
-  { value: 'fall', label: '秋' },
+  { value: 'autumn', label: '秋' },
   { value: 'winter', label: '冬' },
 ]
 
