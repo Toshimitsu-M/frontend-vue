@@ -1,51 +1,45 @@
 export function parseDate(input: string): string {
-  // 現在の年を取得
   const today = new Date();
   let year = today.getFullYear();
   let season: string = '';
 
-  // 年の計算
   const beforeYearMatch = input.match(/(\d+)年前/);
   const afterYearMatch = input.match(/(\d+)年後/);
   const nextYearMatch = input.match(/来年/);
+  const specificYearMatch = input.match(/(\d{4})/);
+
   if (beforeYearMatch) {
-      year -= parseInt(beforeYearMatch[1], 10);
+    year -= parseInt(beforeYearMatch[1], 10);
   } else if (afterYearMatch) {
     year += parseInt(afterYearMatch[1], 10);
   } else if (nextYearMatch) {
     year += 1;
+  } else if (specificYearMatch) {
+    year = parseInt(specificYearMatch[1], 10);
   }
 
-
-  // 季節の変換
   if (input.includes('春')) {
-      season = 'spring';
+    season = 'spring';
   } else if (input.includes('夏')) {
-      season = 'summer';
+    season = 'summer';
   } else if (input.includes('秋')) {
-      season = 'autumn'; 
+    season = 'fall';
   } else if (input.includes('冬')) {
-      season = 'winter';
+    season = 'winter';
   } else {
-    const fourSeason: number = today.getMonth() + 1
-    if (fourSeason === (1 || 2 || 3)) {
-        season = 'winter'
-    } else if (fourSeason === 4 || fourSeason === 5 || fourSeason === 6) {
-        season = 'spring'
-    } else if (fourSeason === 7 || fourSeason === 8 || fourSeason === 9) {
-        season = 'summer'
-    } else if (fourSeason === 10 || fourSeason === 11 || fourSeason === 12) {
-        season = 'winter'
+    const month = today.getMonth() + 1;
+    if (month >= 1 && month <= 3) {
+      season = 'winter';
+    } else if (month >= 4 && month <= 6) {
+      season = 'spring';
+    } else if (month >= 7 && month <= 9) {
+      season = 'summer';
+    } else {
+      season = 'fall';
     }
   }
 
-  // 結果をフォーマットして返す
-  if (season !== '') {
-    return `${year}-${season}`;
-  } else {
-    return `${year}`;
-  }
-  
+  return season !== '' ? `${year}-${season}` : `${year}`;
 }
 
 // 使用例
