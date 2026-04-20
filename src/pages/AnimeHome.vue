@@ -58,54 +58,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect, computed } from 'vue'
-import { storeToRefs } from 'pinia'
+import { ref, watch, watchEffect } from 'vue'
 import CurrentAnime from '../components/AnnictAPI/CurrentAnime.vue'
 import NextAnime from '../components/AnnictAPI/NextAnime.vue'
 import SeasonalAnime from '../components/AnnictAPI/SeasonalAnime.vue'
 import AnimeList from '../components/AnnictAPI/AnimeList.vue'
 import CharactersList from '../components/AnnictAPI/CharactersList.vue'
-import { useAnimeStore } from '../store/animeStore'
-import { parseDate } from '../components/AnnictAPI/ParseDate'
+import { useAnimeStore } from '../store/animeStore' // ストアをインポート
 
+// 検索バーの入力値を保持するためのref
 const searchItems = ref<string>('')
-const store = useAnimeStore()
-const { searchKey } = storeToRefs(store)
+const searchKey = ref<string>('')
 
+// クリックおよびenter押下時に key を更新
 const performSearch = () => {
-  console.log(searchItems.value)
-  store.setSearchKey(searchItems.value)
+  console.log(searchItems.value) // 現在の検索バーの値をコンソールに出力
+  searchKey.value = searchItems.value
+
+  // 検索キーをストアに保持
+  const store = useAnimeStore()
+  store.setSearchKey(searchKey.value)
 }
-
-const SEASONAL_KEYWORDS = /[春夏秋冬]|年前|年後|来年|\d{4}/
-
-const seasonToJa: Record<string, string> = {
-  spring: '春',
-  summer: '夏',
-  fall: '秋',
-  winter: '冬',
-}
-
-const seasonTabLabel = computed(() => {
-  const key = String(searchKey.value)
-  if (!key || !SEASONAL_KEYWORDS.test(key)) return 'N期のアニメ'
-  const parsed = parseDate(key)
-  const [year, season] = parsed.split('-')
-  return season && seasonToJa[season] ? `${year}年${seasonToJa[season]}のアニメ` : `${year}年のアニメ`
-})
 
 const selectedTab = ref(0)
-const tabs = computed(() => [
-  { label: '今期のアニメ' },
-  { label: '来期のアニメ' },
-  { label: seasonTabLabel.value },
+const tabs = ref([
+  { label: '今期' },
+  { label: '来期' },
+  { label: 'N期' },
   { label: 'アニメ作品' },
-  { label: 'キャラクター' },
+  { label: 'キャラクター' }
 ])
-
-watchEffect(() => {
-  if (searchKey.value && SEASONAL_KEYWORDS.test(String(searchKey.value))) {
-    selectedTab.value = 2
-  }
-})
 </script>
