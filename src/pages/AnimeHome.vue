@@ -82,9 +82,9 @@ const performSearch = () => {
 
 const selectedTab = ref(0)
 const tabs = ref([
-  { label: '今期のアニメ' },
-  { label: '来期のアニメ' },
-  { label: 'N期のアニメ' },
+  { label: '今期' },
+  { label: '来期' },
+  { label: 'N期' },
   { label: 'アニメ作品' },
   { label: 'キャラクター' }
 ])

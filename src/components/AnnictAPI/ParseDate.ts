@@ -23,7 +23,7 @@ export function parseDate(input: string): string {
   } else if (input.includes('夏')) {
       season = 'summer';
   } else if (input.includes('秋')) {
-      season = 'autumn'; 
+      season = 'autumn';
   } else if (input.includes('冬')) {
       season = 'winter';
   } else {
@@ -45,7 +45,7 @@ export function parseDate(input: string): string {
   } else {
     return `${year}`;
   }
-  
+
 }
 
 // 使用例
