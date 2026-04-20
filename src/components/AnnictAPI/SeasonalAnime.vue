@@ -1,12 +1,19 @@
 <template>
   <div>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">
-      検索ヒント：
-      <span class="font-mono bg-gray-100 dark:bg-gray-700 rounded px-1">2024年春</span>、
-      <span class="font-mono bg-gray-100 dark:bg-gray-700 rounded px-1">3年前の夏</span>、
-      <span class="font-mono bg-gray-100 dark:bg-gray-700 rounded px-1">来年冬</span>
-      のように入力してください
-    </p>
+    <div class="flex gap-3 justify-center mb-6">
+      <select
+        v-model="selectedYear"
+        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      >
+        <option v-for="y in years" :key="y" :value="y">{{ y }}年</option>
+      </select>
+      <select
+        v-model="selectedSeason"
+        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+      >
+        <option v-for="s in seasonOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+      </select>
+    </div>
     <div id="app" class="p-6 flex flex-col items-center">
       <div v-if="loading" class="text-center text-gray-500">Loading...</div>
       <div
@@ -33,13 +40,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
 import Card from './AnnictCard.vue'
 import { useQuery } from '@vue/apollo-composable'
 import { gql } from '@apollo/client/core'
-import { parseDate } from './ParseDate'
 import { useAnimeStore } from '../../store/animeStore'
-import { storeToRefs } from 'pinia'
 
 type Query =
   | {
@@ -57,22 +62,32 @@ type Query =
   | undefined
 
 const store = useAnimeStore()
-const { searchKey } = storeToRefs(store)
 
-const getSeason = () => {
+const getCurrentSeason = (): string => {
   const month = new Date().getMonth() + 1
-  const year = new Date().getFullYear()
-  const seasonMap = [
-    'winter', 'winter', 'winter',
-    'spring', 'spring', 'spring',
-    'summer', 'summer', 'summer',
-    'fall', 'fall', 'fall'
-  ]
-  return `${year}-${seasonMap[month - 1]}`
+  const seasonMap = ['winter', 'winter', 'winter', 'spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'fall', 'fall', 'fall']
+  return seasonMap[month - 1]
 }
 
-const season = ref<string>(getSeason())
+const currentYear = new Date().getFullYear()
+const selectedYear = ref<number>(currentYear)
+const selectedSeason = ref<string>(getCurrentSeason())
 const first = ref<number>(10)
+
+const years = computed(() => {
+  const result: number[] = []
+  for (let y = currentYear + 1; y >= 2000; y--) {
+    result.push(y)
+  }
+  return result
+})
+
+const seasonOptions = [
+  { value: 'spring', label: '春' },
+  { value: 'summer', label: '夏' },
+  { value: 'fall', label: '秋' },
+  { value: 'winter', label: '冬' },
+]
 
 const GET_WORKS = gql`
   query GetWorks($seasons: [String!], $first: Int!) {
@@ -95,38 +110,17 @@ const GET_WORKS = gql`
   }
 `
 
+const variables = computed(() => ({
+  seasons: [`${selectedYear.value}-${selectedSeason.value}`],
+  first: first.value
+}))
+
 const {
   result: annictCards,
   loading,
-  refetch
-} = useQuery<Query>(GET_WORKS, {
-  variables: {
-    seasons: [season.value],
-    first: first.value
-  },
-  fetchPolicy: 'cache-first'
-})
+} = useQuery<Query>(GET_WORKS, variables, { fetchPolicy: 'cache-first' })
 
 const loadMore = () => {
   first.value += 10
-  refetch({ seasons: [season.value], first: first.value })
 }
-
-watchEffect(() => {
-  if (searchKey.value) {
-    season.value = parseDate(String(searchKey.value))
-  }
-  refetch({ seasons: [season.value], first: first.value })
-
-  if (annictCards.value?.searchWorks.edges) {
-    store.setAnimeList(
-      annictCards.value.searchWorks.edges.map((edge) => ({
-        title: edge.node.title,
-        watchersCount: edge.node.watchersCount,
-        seasonYear: edge.node.seasonYear,
-        image: { facebookOgImageUrl: edge.node.image.facebookOgImageUrl || '' }
-      }))
-    )
-  }
-})
 </script>

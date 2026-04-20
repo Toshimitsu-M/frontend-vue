@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue'
+import { ref } from 'vue'
 import CurrentAnime from '../components/AnnictAPI/CurrentAnime.vue'
 import NextAnime from '../components/AnnictAPI/NextAnime.vue'
 import SeasonalAnime from '../components/AnnictAPI/SeasonalAnime.vue'
@@ -70,10 +70,6 @@ import { useAnimeStore } from '../store/animeStore' // ストアをインポー�
 const searchItems = ref<string>('')
 const searchKey = ref<string>('')
 
-const isSeasonSearch = (input: string): boolean => {
-  return /[春夏秋冬]|年前|年後|来年|\d{4}年/.test(input)
-}
-
 // クリックおよびenter押下時に key を更新
 const performSearch = () => {
   searchKey.value = searchItems.value
@@ -81,11 +77,6 @@ const performSearch = () => {
   // 検索キーをストアに保持
   const store = useAnimeStore()
   store.setSearchKey(searchKey.value)
-
-  // シーズンキーワードが含まれていたら「N期のアニメ」タブへ自動切替
-  if (isSeasonSearch(searchKey.value)) {
-    selectedTab.value = 2
-  }
 }
 
 const selectedTab = ref(0)
