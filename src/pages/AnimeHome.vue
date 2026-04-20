@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue'
+import { ref } from 'vue'
 import CurrentAnime from '../components/AnnictAPI/CurrentAnime.vue'
 import NextAnime from '../components/AnnictAPI/NextAnime.vue'
 import SeasonalAnime from '../components/AnnictAPI/SeasonalAnime.vue'
@@ -72,7 +72,6 @@ const searchKey = ref<string>('')
 
 // クリックおよびenter押下時に key を更新
 const performSearch = () => {
-  console.log(searchItems.value) // 現在の検索バーの値をコンソールに出力
   searchKey.value = searchItems.value
 
   // 検索キーをストアに保持
