@@ -40,7 +40,7 @@ import Header from '../components/Header.vue'
 const showButton = import.meta.env.VITE_SHOW_BUTTON === 'true';
 
 // @ts-ignore
-const show = ref(import.meta.env.VITE_SHOW_BUTTON === 'true')
+const show = ref(false)
 
 // ダークモードの状態を管理
 const isDark = ref(false)
