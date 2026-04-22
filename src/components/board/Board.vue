@@ -7,7 +7,7 @@
     <div
       v-for="(card, key) in cards"
       :key="key"
-      class="absolute bg-blue-500 text-white px-4 py-2 rounded"
+      class="absolute bg-primary-600 text-white px-4 py-2 rounded"
       :style="{ top: card.y + 'px', left: card.x + 'px' }"
       :draggable="editMode.key !== key"
       @dragstart="editMode.key !== key ? onDragStart($event, key) : null"
