@@ -1,9 +1,9 @@
 <template>
-  <div class="p-4 mt-10 flex flex-col h-full">
-    <div class="flex-grow">
+  <div class="p-4 pt-20 flex flex-col h-[100dvh] overflow-hidden">
+    <div class="flex-grow overflow-y-auto">
       <List />
     </div>
-    <div class="pb-6 flex flex-col gap-3">
+    <div class="pb-4 flex flex-col gap-3 shrink-0">
       <button @click="isDark = !isDark" :class="[
         'relative w-15 h-8 rounded-full transition-colors duration-300 focus:outline-none border border-gray-200 cursor-pointer',
         isDark ? 'bg-gray-800' : 'bg-gray-100'

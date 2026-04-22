@@ -1,29 +1,27 @@
 <template>
-  <div class="relative">
-    <!-- ヘッダー -->
-    <!-- //Header.vueのボタンを押下したらサイドバーを開く -->
+  <div class="relative bg-gray-100 dark:bg-gray-800">
+    <!-- ロゴ＋三本線ストリップ（常時最前面表示） -->
     <Header
-      class="fixed w-full top-0 p-2 z-21 bg-gray-100 dark:bg-gray-800 text-primary-600/80"
+      class="fixed top-0 left-0 z-50 p-1 bg-gray-100 dark:bg-gray-800"
       :show="show"
       @update:show="show = $event"
     />
 
-    <!-- サイドバー -->
+    <!-- サイドバー（ヘッダーに重なるよう z-40） -->
     <div
       v-if="showButton"
-      class="left-0 fixed w-40 top-1 h-screen bg-gray-100 dark:bg-gray-800 z-20 transform transition-transform duration-300"
-      :class="{ '-translate-x-[100%]': !show }"
+      class="fixed left-0 top-0 w-40 h-[100dvh] bg-gray-100 dark:bg-gray-800 z-40 transform transition-transform duration-300"
+      :class="{ '-translate-x-full': !show }"
     >
       <Sidebar />
     </div>
 
     <!-- メインコンテンツ -->
-    <div class="flex-1 pt-12 bg-white dark:bg-gray-700 h-screen overflow-auto transition-all duration-300" 
-    :class="{ 'pl-40': show, 'pl-0': !show }"
+    <div
+      class="min-h-screen bg-gray-100 dark:bg-gray-800 overflow-auto transition-all duration-300"
+      :class="show ? 'pl-40' : 'pl-10'"
     >
-      <div>
-        <slot />
-      </div>
+      <slot />
     </div>
   </div>
 </template>
