@@ -15,9 +15,9 @@
 
       <!-- お気に入りボタン -->
       <button v-if="character" @click="toggleFavorite"
-        :class="favorites.includes(character.name) ? 'bg-red-500' : 'bg-blue-500'"
+        :class="isFavorite ? 'bg-red-500' : 'bg-blue-500'"
         class="p-2 text-white rounded-lg mt-4 w-40 shadow-md">
-        {{ favorites.includes(character.name) ? 'お気に入り解除' : 'お気に入り追加' }}
+        {{ isFavorite ? 'お気に入り解除' : 'お気に入り追加' }}
       </button>
     </div>
 
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCharacterStore } from '../../store/characterStore'
 import { storeToRefs } from 'pinia'
@@ -83,12 +83,13 @@ import {
   ArrowUpIcon
 } from '@heroicons/vue/24/outline'
 import { fetchCharacterComments, saveCharacterComment, deleteCharacterComment, type CharacterComment, createCharacterComment } from '../../api/characterComment'
+import { fetchFavorites, addFavorite, removeFavorite } from '../../api/favorite'
 import { useAuthStore } from '../../store/auth'
 
 const auth = useAuthStore()
 const router = useRouter()
 const comment = ref('')
-const favorites = ref<string[]>([])
+const isFavorite = ref(false)
 const addIsComposing = ref(false)
 const characterCommentList = ref<CharacterComment[]>([])
 
@@ -99,14 +100,19 @@ const character = selectedCharacter
 console.log(character.value)
 
 //お気に入り処理
-const toggleFavorite = () => {
-  console.log('toggleFavorite called')
-  console.log(character.value?.name) // 正しくIDが取得されているか確認
-  const id = character.value?.name as string
-  if (favorites.value.includes(id)) {
-    favorites.value = favorites.value.filter((fav) => fav !== id)
-  } else {
-    favorites.value = [...favorites.value, id]
+const toggleFavorite = async () => {
+  if (!auth.isLoggedIn() || !character.value) return
+  const characterId = getCharacterId()
+  try {
+    if (isFavorite.value) {
+      await removeFavorite(characterId)
+      isFavorite.value = false
+    } else {
+      await addFavorite(characterId, character.value.name, character.value.image)
+      isFavorite.value = true
+    }
+  } catch (error) {
+    console.error('お気に入り操作に失敗しました:', error)
   }
 }
 
@@ -254,7 +260,13 @@ onBeforeUnmount(() => {
 // マウント時にデータ取得
 onMounted(async () => {
   const id = character.value?.id?.toString() || (character.value?.name as string)
-  const comments = await fetchCharacterComments(id) // fetchCommentListの非同期処理が完了するまで待機
+
+  if (auth.isLoggedIn()) {
+    const favorites = await fetchFavorites()
+    isFavorite.value = favorites.some(f => f.characterId === id)
+  }
+
+  const comments = await fetchCharacterComments(id)
 
 
 
@@ -272,7 +284,6 @@ onMounted(async () => {
 })
 
 // Wikipedia検索
-const keyword = ref('');
 const searchVoiceActor = () => {
   const name = character.value?.voiceActors ?? '';
   const encoded = encodeURIComponent(name);

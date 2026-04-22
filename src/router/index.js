@@ -8,6 +8,8 @@ import AnimeList from '../pages/AnimeList.vue';
 import AnimeDetail from '../components/annictapi/AnimeDetail.vue';
 import CharacterDetail from '../components/annictapi/CharacterDetail.vue';
 import Home from '../pages/Home.vue';
+import PLStatement from '../pages/PLStatement.vue';
+import Favorites from '../pages/Favorites.vue';
 
 
 const routes = [
@@ -63,6 +65,18 @@ const routes = [
     path: '/popularAnime/characterDetail',
     name: 'CharacterDetail',
     component: CharacterDetail,
+  },
+  {
+    // 損益計算書
+    path: '/plStatement',
+    name: 'PLStatement',
+    component: PLStatement,
+  },
+  {
+    // お気に入り
+    path: '/favorites',
+    name: 'Favorites',
+    component: Favorites,
   }
 ];
 

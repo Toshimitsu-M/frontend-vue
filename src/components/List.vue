@@ -59,6 +59,11 @@ const lists = reactive<SidebarItem[]>([
     icon: 'ClipboardDocumentCheckIcon',
     link: '/characterChat',
   },
+  {
+    name: '損益計算書',
+    icon: 'ClipboardDocumentCheckIcon',
+    link: '/plStatement',
+  },
 ]);
 
 const visibleLists = computed(() =>

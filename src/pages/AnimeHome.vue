@@ -51,6 +51,7 @@
           <div v-if="selectedTab === 2"><SeasonalAnime></SeasonalAnime></div>
           <div v-if="selectedTab === 3"><AnimeList></AnimeList></div>
           <div v-if="selectedTab === 4"><CharactersList></CharactersList></div>
+          <div v-if="selectedTab === 5"><FavoriteCharacters></FavoriteCharacters></div>
         </div>
       </div>
     </div>
@@ -64,6 +65,7 @@ import NextAnime from '../components/AnnictAPI/NextAnime.vue'
 import SeasonalAnime from '../components/AnnictAPI/SeasonalAnime.vue'
 import AnimeList from '../components/AnnictAPI/AnimeList.vue'
 import CharactersList from '../components/AnnictAPI/CharactersList.vue'
+import FavoriteCharacters from '../components/AnnictAPI/FavoriteCharacters.vue'
 import { useAnimeStore } from '../store/animeStore' // ストアをインポート
 
 // 検索バーの入力値を保持するためのref
@@ -85,6 +87,7 @@ const tabs = ref([
   { label: '来期' },
   { label: 'N期' },
   { label: 'アニメ作品' },
-  { label: 'キャラクター' }
+  { label: 'キャラクター' },
+  { label: 'お気に入り' }
 ])
 </script>
