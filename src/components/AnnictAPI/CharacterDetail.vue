@@ -15,7 +15,7 @@
 
       <!-- お気に入りボタン -->
       <button v-if="character" @click="toggleFavorite"
-        :class="isFavorite ? 'bg-red-500' : 'bg-blue-500'"
+        :class="isFavorite ? 'bg-red-500' : 'bg-primary-600'"
         class="p-2 text-white rounded-lg mt-4 w-40 shadow-md">
         {{ isFavorite ? 'お気に入り解除' : 'お気に入り追加' }}
       </button>
@@ -66,7 +66,7 @@
       <textarea v-model="comment" placeholder="コメントする..." class="outline-none resize-none flex-grow w-full md:w-4/5"
         @compositionstart="addIsComposing = true" @compositionend="addIsComposing = false"
         @keydown.enter.exact.prevent="addHandleEnter" @keydown.shift.enter.prevent="addNewline"></textarea>
-      <ArrowUpIcon @click="addHandleEnter" class="w-10 h-10 bg-blue-500 text-white p-3 rounded-full"></ArrowUpIcon>
+      <ArrowUpIcon @click="addHandleEnter" class="w-10 h-10 bg-primary-600 text-white p-3 rounded-full"></ArrowUpIcon>
     </div>
   </div>
 </template>

@@ -12,7 +12,7 @@
         placeholder="サトルに話しかけよう..."
         class="flex-grow border p-2 rounded"
       />
-      <button @click="sendMessage" class="px-4 py-2 bg-blue-500 text-white rounded">送信</button>
+      <button @click="sendMessage" class="px-4 py-2 bg-primary-600 text-white rounded">送信</button>
     </div>
   </div>
 </template>

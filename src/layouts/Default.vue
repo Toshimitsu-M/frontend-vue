@@ -3,7 +3,7 @@
     <!-- ヘッダー -->
     <!-- //Header.vueのボタンを押下したらサイドバーを開く -->
     <Header
-      class="fixed w-full top-0 p-2 z-21 bg-gray-100 dark:bg-gray-800 text-orange-600/80"
+      class="fixed w-full top-0 p-2 z-21 bg-gray-100 dark:bg-gray-800 text-primary-600/80"
       :show="show"
       @update:show="show = $event"
     />
